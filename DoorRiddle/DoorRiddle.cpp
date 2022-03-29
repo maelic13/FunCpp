@@ -4,7 +4,7 @@
 using namespace std;
 
 
-unsigned long xorshf96(void) {
+unsigned long xorshf96() {
     static unsigned long x = 123456789, y = 362436069, z = 521288629;
 
     x ^= x << 16;
@@ -16,16 +16,20 @@ unsigned long xorshf96(void) {
     y = z;
     z = t ^ x ^ y;
 
-    return z % 3;
+    return z;
 }
 
+
+unsigned long xorshf96_modulo() {
+    return xorshf96() % 3;
+}
 
 long long play_game(const long long cycles, const bool change_choice) {
     constexpr bool doors[] = { false, true, false };
     long long successful = 0;
 
     for (int i{}; i < cycles; i++) {
-        if (change_choice != doors[xorshf96()]) {
+        if (change_choice != doors[xorshf96_modulo()]) {
             successful += 1;
         }
     }
@@ -36,7 +40,7 @@ long long play_game(const long long cycles, const bool change_choice) {
 
 void print_results(const long long successful, const long long cycles, const bool change_choice, const double elapsed) {
     cout << endl;
-    cout << "Change = " << change_choice << ". Time elapsed: " << elapsed * 1000 << " ms." << endl;
+    cout << "Change = " << std::boolalpha << change_choice << ". Time elapsed: " << elapsed * 1000 << " ms." << endl;
     cout << successful << " successful tries, " << cycles << " total. Success rate " << static_cast<double>(successful)
         / cycles * 100. << " %." << endl;
     cout << "Speed = " << cycles / elapsed / 1000000 << " Miter/s." << endl;
