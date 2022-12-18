@@ -1,8 +1,6 @@
 #include <chrono>
 #include <iostream>
 
-#include "DoorRiddleJenda.cpp"
-
 using namespace std;
 
 
@@ -64,7 +62,5 @@ int main()
     successful = play_game(cycles, true);
     print_results(successful, cycles, true, sec(Clock::now() - start).count());
 
-    cout << endl << "Solution Jenda." << endl;
-    jenda_main();
     return 0;
 }

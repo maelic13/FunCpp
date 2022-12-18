@@ -1,5 +1,4 @@
 #include <chrono>
-#include <ctime>
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -8,7 +7,7 @@
 
 using namespace std;
 
-unsigned long jenda_xorshf96() {
+unsigned long xorshf96() {
     static unsigned long x = 123456789, y = 362436069, z = 521288629;
     unsigned long t;
 
@@ -29,7 +28,7 @@ void PlayGame(int cycles, bool changeChoice, int& successful) {
     bool doors[] = { false, true, false };
 
     for (int i = 0; i < cycles; i++) {
-        if (changeChoice != doors[jenda_xorshf96()]) {
+        if (changeChoice != doors[xorshf96()]) {
             successful++;
         }
     }
@@ -50,7 +49,7 @@ void PlayGameMultiThreaded(int n, const int maxCycles, const int trash, bool cha
 }
 
 
-void jenda_print_results(int successful, int cycles, bool changeChoice, double elapsed) {
+void print_results(int successful, int cycles, bool changeChoice, double elapsed) {
 
     cout << endl;
     cout << "Change = " << changeChoice << ". Time elapsed: " << elapsed << " ms." << endl;
@@ -59,7 +58,7 @@ void jenda_print_results(int successful, int cycles, bool changeChoice, double e
 }
 
 
-int jenda_main()
+int main()
 {
     const int maxCycles = 1000000000;
     double elapsedPrev = maxCycles;
@@ -93,7 +92,7 @@ int jenda_main()
         }
         else
             elapsed = sec(Clock::now() - start).count();
-            jenda_print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, false, sec(Clock::now() - start).count() * 1000);
+            print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, false, sec(Clock::now() - start).count() * 1000);
 
 
 
@@ -113,7 +112,7 @@ int jenda_main()
             }
         }
         else
-            jenda_print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, true, sec(Clock::now() - start).count() * 1000);
+            print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, true, sec(Clock::now() - start).count() * 1000);
     }
 
     if (wantIterativeCMD)
