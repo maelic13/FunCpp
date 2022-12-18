@@ -14,11 +14,11 @@ inline int fast_rand() {
     return (g_seed>>16)&0x7FFF;
 }
 
-long long play_game(const long long cycles, const bool change_choice) {
+u_int64_t play_game(u_int64_t cycles, bool change_choice) {
     constexpr bool doors[] = {false, true, false};
-    long long successful = 0;
+    u_int64_t successful = 0;
 
-    for (int i{}; i < cycles; i++) {
+    for (u_int64_t i = 0; i < cycles; i++) {
         if (change_choice != doors[fast_rand() % 3 + 1]) {
             successful += 1;
         }
@@ -28,18 +28,18 @@ long long play_game(const long long cycles, const bool change_choice) {
 }
 
 
-void print_results(const long long successful, const long long cycles, const bool change_choice, auto duration) {
+void print_results(u_int64_t successful, u_int64_t cycles, bool change_choice, auto duration) {
     cout << endl;
     cout << "Change = " << boolalpha << change_choice << ". Time elapsed: "
          << duration_cast<milliseconds>(duration).count() << " ms." << endl;
     cout << successful << " successful tries, " << cycles << " total. Success rate "
-         << static_cast<double>(successful) / cycles * 100. << " %." << endl;
+         << static_cast<double>(successful) / static_cast<double>(cycles) * 100 << " %." << endl;
     cout << "Speed = " << cycles / duration_cast<microseconds>(duration).count() << " Miter/s." << endl;
 }
 
 
 int main() {
-    constexpr auto cycles = 1000000000;
+    constexpr u_int64_t cycles = 1000000000;
     random_device rd;
     g_seed = (int) time(nullptr);
 
