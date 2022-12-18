@@ -1,30 +1,17 @@
 #include <chrono>
 #include <iostream>
+#include <random>
 
 using namespace std;
 using namespace std::chrono;
 
 typedef high_resolution_clock Clock;
+static int g_seed;
 
 
-unsigned long xorshf96() {
-    static unsigned long x = 123456789, y = 362436069, z = 521288629;
-
-    x ^= x << 16;
-    x ^= x >> 5;
-    x ^= x << 1;
-
-    const unsigned long t = x;
-    x = y;
-    y = z;
-    z = t ^ x ^ y;
-
-    return z;
-}
-
-
-unsigned long xorshf96_modulo() {
-    return xorshf96() % 3;
+inline int fast_rand() {
+    g_seed = (214013*g_seed+2531011);
+    return (g_seed>>16)&0x7FFF;
 }
 
 long long play_game(const long long cycles, const bool change_choice) {
@@ -32,7 +19,7 @@ long long play_game(const long long cycles, const bool change_choice) {
     long long successful = 0;
 
     for (int i{}; i < cycles; i++) {
-        if (change_choice != doors[xorshf96_modulo()]) {
+        if (change_choice != doors[fast_rand() % 3 + 1]) {
             successful += 1;
         }
     }
@@ -53,6 +40,8 @@ void print_results(const long long successful, const long long cycles, const boo
 
 int main() {
     constexpr auto cycles = 1000000000;
+    random_device rd;
+    g_seed = (int) time(nullptr);
 
     Clock::time_point start = Clock::now();
     auto successful = play_game(cycles, false);
