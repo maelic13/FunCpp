@@ -41,13 +41,13 @@ long long play_game(const long long cycles, const bool change_choice) {
 }
 
 
-void print_results(const long long successful, const long long cycles, const bool change_choice, auto start, auto end) {
+void print_results(const long long successful, const long long cycles, const bool change_choice, auto duration) {
     cout << endl;
     cout << "Change = " << boolalpha << change_choice << ". Time elapsed: "
-         << duration_cast<milliseconds>(end - start).count() << " ms." << endl;
+         << duration_cast<milliseconds>(duration).count() << " ms." << endl;
     cout << successful << " successful tries, " << cycles << " total. Success rate "
          << static_cast<double>(successful) / cycles * 100. << " %." << endl;
-    cout << "Speed = " << cycles / duration_cast<microseconds>(end - start).count() << " Miter/s." << endl;
+    cout << "Speed = " << cycles / duration_cast<microseconds>(duration).count() << " Miter/s." << endl;
 }
 
 
@@ -56,11 +56,11 @@ int main() {
 
     Clock::time_point start = Clock::now();
     auto successful = play_game(cycles, false);
-    print_results(successful, cycles, false, start, Clock::now());
+    print_results(successful, cycles, false, Clock::now() - start);
 
     start = Clock::now();
     successful = play_game(cycles, true);
-    print_results(successful, cycles, true, start, Clock::now());
+    print_results(successful, cycles, true, Clock::now() - start);
 
     return 0;
 }
