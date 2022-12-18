@@ -9,9 +9,9 @@ typedef high_resolution_clock Clock;
 static int g_seed;
 
 
-inline int fast_rand() {
-    g_seed = (214013*g_seed+2531011);
-    return (g_seed>>16)&0x7FFF;
+u_int32_t fast_rand() {
+    g_seed = 16807 * g_seed;
+    return g_seed >> 16 & 2147483647;
 }
 
 u_int64_t play_game(u_int64_t cycles, bool change_choice) {
