@@ -2,6 +2,9 @@
 #include <iostream>
 
 using namespace std;
+using namespace std::chrono;
+
+typedef high_resolution_clock Clock;
 
 
 unsigned long xorshf96() {
@@ -25,7 +28,7 @@ unsigned long xorshf96_modulo() {
 }
 
 long long play_game(const long long cycles, const bool change_choice) {
-    constexpr bool doors[] = { false, true, false };
+    constexpr bool doors[] = {false, true, false};
     long long successful = 0;
 
     for (int i{}; i < cycles; i++) {
@@ -38,29 +41,26 @@ long long play_game(const long long cycles, const bool change_choice) {
 }
 
 
-void print_results(const long long successful, const long long cycles, const bool change_choice, const double elapsed) {
+void print_results(const long long successful, const long long cycles, const bool change_choice, auto start, auto end) {
     cout << endl;
-    cout << "Change = " << std::boolalpha << change_choice << ". Time elapsed: " << elapsed * 1000 << " ms." << endl;
-    cout << successful << " successful tries, " << cycles << " total. Success rate " << static_cast<double>(successful)
-        / cycles * 100. << " %." << endl;
-    cout << "Speed = " << cycles / elapsed / 1000000 << " Miter/s." << endl;
+    cout << "Change = " << boolalpha << change_choice << ". Time elapsed: "
+         << duration_cast<milliseconds>(end - start).count() << " ms." << endl;
+    cout << successful << " successful tries, " << cycles << " total. Success rate "
+         << static_cast<double>(successful) / cycles * 100. << " %." << endl;
+    cout << "Speed = " << cycles / duration_cast<microseconds>(end - start).count() << " Miter/s." << endl;
 }
 
 
-int main()
-{
+int main() {
     constexpr auto cycles = 1000000000;
-
-    typedef std::chrono::high_resolution_clock Clock;
-    typedef std::chrono::duration<double> sec;
 
     Clock::time_point start = Clock::now();
     auto successful = play_game(cycles, false);
-    print_results(successful, cycles, false, sec(Clock::now() - start).count());
+    print_results(successful, cycles, false, start, Clock::now());
 
     start = Clock::now();
     successful = play_game(cycles, true);
-    print_results(successful, cycles, true, sec(Clock::now() - start).count());
+    print_results(successful, cycles, true, start, Clock::now());
 
     return 0;
 }
