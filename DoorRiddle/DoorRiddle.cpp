@@ -1,24 +1,25 @@
 #include <chrono>
 #include <iostream>
-#include <random>
 
 using namespace std;
 using namespace std::chrono;
 
-typedef high_resolution_clock Clock;
-static int g_seed;
+typedef high_resolution_clock hr_clock;
+
+static uint32_t g_seed;
 
 
-u_int32_t fast_rand() {
+uint32_t fast_rand() {
     g_seed = 16807 * g_seed;
     return g_seed >> 16 & 2147483647;
 }
 
-u_int64_t play_game(u_int64_t cycles, bool change_choice) {
-    constexpr bool doors[] = {false, true, false};
-    u_int64_t successful = 0;
 
-    for (u_int64_t i = 0; i < cycles; i++) {
+uint64_t play_game(uint64_t cycles, bool change_choice) {
+    constexpr bool doors[] = {false, true, false};
+    uint64_t successful = 0;
+
+    for (uint64_t i = 0; i < cycles; i++) {
         if (change_choice != doors[fast_rand() % 3]) {
             successful += 1;
         }
@@ -28,7 +29,7 @@ u_int64_t play_game(u_int64_t cycles, bool change_choice) {
 }
 
 
-void print_results(u_int64_t successful, u_int64_t cycles, bool change_choice, auto duration) {
+void print_results(uint64_t successful, uint64_t cycles, bool change_choice, hr_clock::duration duration) {
     cout << endl;
     cout << "Change = " << boolalpha << change_choice << ". Time elapsed: "
          << duration_cast<milliseconds>(duration).count() << " ms." << endl;
@@ -39,17 +40,16 @@ void print_results(u_int64_t successful, u_int64_t cycles, bool change_choice, a
 
 
 int main() {
-    constexpr u_int64_t cycles = 1000000000;
-    random_device rd;
-    g_seed = (int) time(nullptr);
+    constexpr uint64_t cycles = 1000000000;
+    g_seed = time(nullptr);
 
-    Clock::time_point start = Clock::now();
+    hr_clock::time_point start = hr_clock::now();
     auto successful = play_game(cycles, false);
-    print_results(successful, cycles, false, Clock::now() - start);
+    print_results(successful, cycles, false, hr_clock::now() - start);
 
-    start = Clock::now();
+    start = hr_clock::now();
     successful = play_game(cycles, true);
-    print_results(successful, cycles, true, Clock::now() - start);
+    print_results(successful, cycles, true, hr_clock::now() - start);
 
     return 0;
 }

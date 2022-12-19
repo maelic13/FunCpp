@@ -8,7 +8,7 @@
 using namespace std;
 using namespace std::chrono;
 
-typedef high_resolution_clock Clock;
+typedef high_resolution_clock hr_clock;
 
 
 unsigned long xorshf96() {
@@ -84,26 +84,26 @@ int main() {
 
         // prvni
         fill(successful, successful + n, 0);
-        Clock::time_point start = Clock::now();
+        hr_clock::time_point start = hr_clock::now();
         PlayGameMultiThreaded(n, maxCycles, trash, false, successful);
 
         if (wantIterativeCMD) {
-            elapsed = duration_cast<milliseconds>(Clock::now() - start).count();
+            elapsed = duration_cast<milliseconds>(hr_clock::now() - start).count();
             cout << "n-threads = " << n << ", Change = 0" << ", Time elapsed : " << elapsed << " ms." << endl;
         } else
-            elapsed = duration_cast<milliseconds>(Clock::now() - start).count();
+            elapsed = duration_cast<milliseconds>(hr_clock::now() - start).count();
         print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, false,
-                      duration_cast<milliseconds>(Clock::now() - start).count());
+                      duration_cast<milliseconds>(hr_clock::now() - start).count());
 
 
 
         // druhy
         fill(successful, successful + n, 0);
-        start = Clock::now();
+        start = hr_clock::now();
         PlayGameMultiThreaded(n, maxCycles, trash, true, successful);
 
         if (wantIterativeCMD) {
-            elapsed2 = duration_cast<milliseconds>(Clock::now() - start).count();
+            elapsed2 = duration_cast<milliseconds>(hr_clock::now() - start).count();
             cout << "n-threads = " << n << ", Change = 1" << ", Time elapsed : " << elapsed2 * 1000 << " ms." << endl;
             cout << endl;
             if (elapsed + elapsed2 < elapsedPrev + elapsed2Prev) {
@@ -113,7 +113,7 @@ int main() {
             }
         } else
             print_results(accumulate(successful, successful + n, 0), (cycles * n) + trash, true,
-                          duration_cast<milliseconds>(Clock::now() - start).count());
+                          duration_cast<milliseconds>(hr_clock::now() - start).count());
     }
 
     if (wantIterativeCMD)
