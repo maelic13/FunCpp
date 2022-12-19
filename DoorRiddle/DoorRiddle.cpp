@@ -19,7 +19,7 @@ u_int64_t play_game(u_int64_t cycles, bool change_choice) {
     u_int64_t successful = 0;
 
     for (u_int64_t i = 0; i < cycles; i++) {
-        if (change_choice != doors[fast_rand() % 3 + 1]) {
+        if (change_choice != doors[fast_rand() % 3]) {
             successful += 1;
         }
     }
